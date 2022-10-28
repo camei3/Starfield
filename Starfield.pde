@@ -77,12 +77,10 @@ class Wave extends Particle {
   void move() {
     myR += myV;
     myT += 0.01;
+    myArc -= 0.01;
     myV += myV/16;
     mySize += mySize/64;
   }  
-  float getMyR() {
-    return myR;
-  }
 }
 
 Particle[] particles = new Particle[200];
