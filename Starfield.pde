@@ -83,6 +83,22 @@ class Wave extends Particle {
   }  
 }
 
+class Obstruction {
+  float anchorX, anchorY;
+  float startX, startY;
+  float myTheta;
+  Obstruction() {
+  
+  }
+}
+
+
+
+
+
+
+
+
 Particle[] particles = new Particle[200];
 void setup() {
   size(600, 600);
