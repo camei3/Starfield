@@ -1,4 +1,6 @@
 class Particle {
+  float myR;
+  
   float myX, myY;
   double myT;
   color myColor;
@@ -48,32 +50,39 @@ class Light extends Particle {
   }
 }
 
-class Wave extends Light {
-  float myR; 
+class Wave extends Particle {
   double myArc;
   
   Wave() {
     myX = width/2;
     myY = height/2;
-    myV = (float)Math.random()*6+2;
-    myT = Math.random()*2*PI;
+    myV = (float)Math.random()*4+12;
+    myT = Math.random()*PI;
     myArc = myT + Math.random() * PI;
+    if (Math.random() < 0.5) {
+      myT += PI;
+      myArc += PI;
+    };
     myColor = color((int)(Math.random()*25)+101, (int)(Math.random()*25)+101, (int)(Math.random()*156));
     mySize = (float)Math.random()*1+0.25;    
   }
   
   void show() {
     stroke(myColor);
+    noFill();
     strokeWeight(mySize);
-    arc(0,0,myR,myR,(float)myT,(float)myArc);
+    arc(myX,myY,myR,myR,(float)myT,(float)myArc);
   }
   
   void move() {
-    myR++;
+    myR += myV;
     myT += 0.01;
     myV += myV/64;
     mySize += mySize/64;
   }  
+  float getMyR() {
+    return myR;
+  }
 }
 
 Particle[] particles = new Particle[200];
@@ -81,33 +90,31 @@ void setup() {
   size(600, 600);
   
   for (int i = 0; i < particles.length; i++) {
-    if (Math.random() < 0.2) {
-      particles[i] = new Light();
-    } else {
-      particles[i] = new Particle();      
-    }
+    newRandomParticle(i);
   }
-  
-  particles[0] = new Wave();
 }
 
 float rot;
-
+float anchorX = width/2, anchorY = height/2;
 void draw() {
+  anchorX = (mouseX-width/2)/4;
+  anchorY = (mouseY-height/2)/4;
   background(0);
-  translate(cos(radians(rot))*50,sin(radians(rot+30))*50);
+  //translate(cos(radians(rot))*50,sin(radians(rot+30))*50);
+  //rot++;
+  translate(anchorX,anchorY);
+  
   
   for (int i = 0; i < particles.length; i++) {
     particles[i].move();
     particles[i].show();
  
     
-    
-    if (particles[i].myX > width || particles[i].myX < 0 || particles[i].myY > height || particles[i].myX < 0 ) {
+    if (particles[i] instanceof Wave && particles[i].myR > dist(0,0,width,height)) {
+      particles[i] = new Wave();
+    } else if (particles[i].myX > width || particles[i].myX < 0 || particles[i].myY > height || particles[i].myX < 0 ) {
       if (particles[i] instanceof Light) {
         particles[i] = new Light();        
-      } else if (particles[i] instanceof Wave) {
-        particles[i] = new Wave();
       } else {
         particles[i] = new Particle();
       }
@@ -115,5 +122,15 @@ void draw() {
     }
   }
   resetMatrix();
-  rot++;
 }
+
+void newRandomParticle(int index) {
+  double luck = Math.random();
+    if (luck < 0.2) {
+      particles[index] = new Light();
+    } else if (luck < 0.3){
+      particles[index] = new Wave();      
+    } else {
+      particles[index] = new Particle();
+    }
+};
