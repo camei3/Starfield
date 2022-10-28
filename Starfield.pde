@@ -56,14 +56,14 @@ class Wave extends Particle {
   Wave() {
     myX = width/2;
     myY = height/2;
-    myV = (float)Math.random()*4+12;
+    myV = (float)Math.random()*4+4;
     myT = Math.random()*PI;
     myArc = myT + Math.random() * PI;
     if (Math.random() < 0.5) {
       myT += PI;
       myArc += PI;
     };
-    myColor = color((int)(Math.random()*25)+101, (int)(Math.random()*25)+101, (int)(Math.random()*156));
+    myColor = color((int)(Math.random()*25)+51, (int)(Math.random()*25)+51, (int)(Math.random()*106));
     mySize = (float)Math.random()*1+0.25;    
   }
   
@@ -77,7 +77,7 @@ class Wave extends Particle {
   void move() {
     myR += myV;
     myT += 0.01;
-    myV += myV/64;
+    myV += myV/16;
     mySize += mySize/64;
   }  
   float getMyR() {
@@ -97,8 +97,8 @@ void setup() {
 float rot;
 float anchorX = width/2, anchorY = height/2;
 void draw() {
-  anchorX = (mouseX-width/2)/4;
-  anchorY = (mouseY-height/2)/4;
+  anchorX = -(mouseX-width/2)/16;
+  anchorY = -(mouseY-height/2)/16;
   background(0);
   //translate(cos(radians(rot))*50,sin(radians(rot+30))*50);
   //rot++;
@@ -111,14 +111,9 @@ void draw() {
  
     
     if (particles[i] instanceof Wave && particles[i].myR > dist(0,0,width,height)) {
-      particles[i] = new Wave();
-    } else if (particles[i].myX > width || particles[i].myX < 0 || particles[i].myY > height || particles[i].myX < 0 ) {
-      if (particles[i] instanceof Light) {
-        particles[i] = new Light();        
-      } else {
-        particles[i] = new Particle();
-      }
-
+      newRandomParticle(i);
+    } else if (particles[i].myX > width*2 || particles[i].myX < -height || particles[i].myY > height*2 || particles[i].myX < -width ) {
+      newRandomParticle(i);
     }
   }
   resetMatrix();
@@ -128,7 +123,7 @@ void newRandomParticle(int index) {
   double luck = Math.random();
     if (luck < 0.2) {
       particles[index] = new Light();
-    } else if (luck < 0.3){
+    } else if (luck < 0.25){
       particles[index] = new Wave();      
     } else {
       particles[index] = new Particle();
