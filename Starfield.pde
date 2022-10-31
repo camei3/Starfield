@@ -42,7 +42,6 @@ class Light extends Particle {
     mySize = (float)Math.random()*1+0.25;  
   }
   
-  
   void show() {
     stroke(myColor);
     strokeWeight(mySize);
@@ -57,12 +56,14 @@ class Wave extends Particle {
     myX = width/2;
     myY = height/2;
     myV = (float)Math.random()*4+4;
+    
     myT = Math.random()*PI;
     myArc = myT + Math.random() * PI;
     if (Math.random() < 0.5) {
       myT += PI;
       myArc += PI;
     };
+    
     myColor = color((int)(Math.random()*25)+51, (int)(Math.random()*25)+51, (int)(Math.random()*106));
     mySize = (float)Math.random()*1+0.25;    
   }
@@ -92,47 +93,46 @@ class Obstruction {
   }
 }
 
-
-
-
-
-
-
-
 Particle[] particles = new Particle[200];
+
 void setup() {
+  
   size(600, 600);
+  
   
   for (int i = 0; i < particles.length; i++) {
     newRandomParticle(i);
   }
 }
 
-float rot;
-float anchorX = width/2, anchorY = height/2;
+float pointRot,pointX,pointY;
+float mouseAnchorX = width/2, mouseAnchorY = height/2;
+
 void draw() {
-  anchorX = -(mouseX-width/2)/16;
-  anchorY = -(mouseY-height/2)/16;
-  background(0);
-  //translate(cos(radians(rot))*50,sin(radians(rot+30))*50);
-  //rot++;
-  translate(anchorX,anchorY);
+  //mouse panning, deprecated for now
+  mouseAnchorX = -(mouseX-width/2)/10;
+  mouseAnchorY = -(mouseY-height/2)/10;
   
+  //background, trail effect
+  fill(0,90);
+  rect(-width,-height,width*3,height*3);
   
+  //animating particles
   for (int i = 0; i < particles.length; i++) {
+    
     particles[i].move();
     particles[i].show();
- 
     
+    //remaking new particles of ones off-screen
     if (particles[i] instanceof Wave && particles[i].myR > dist(0,0,width,height)) {
       newRandomParticle(i);
     } else if (particles[i].myX > width*2 || particles[i].myX < -height || particles[i].myY > height*2 || particles[i].myX < -width ) {
       newRandomParticle(i);
     }
   }
-  resetMatrix();
 }
 
+//determining variant of new particle
 void newRandomParticle(int index) {
   double luck = Math.random();
     if (luck < 0.2) {
@@ -143,3 +143,12 @@ void newRandomParticle(int index) {
       particles[index] = new Particle();
     }
 };
+
+//making new warp-point
+void newPoint() {
+  pointRot = (float)(Math.random()*2*PI);
+  pointX = (float)((Math.random()-0.5)*width/1.9);
+  pointY = (float)((Math.random()-0.5)*height/1.9);
+}
+
+//make a burst mode?
