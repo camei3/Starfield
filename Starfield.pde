@@ -9,7 +9,7 @@ class Particle {
   Particle() {
     myX = width/2;
     myY = height/2;
-    myV = (float)Math.random()*4+1;
+    myV = (float)Math.random()*2+1;
     myT = Math.random()*2*PI;
     myColor = color((int)(Math.random()*25)+201, (int)(Math.random()*25)+201, (int)(Math.random()*256));
     mySize = (float)Math.random()*2+0.5;
@@ -38,8 +38,8 @@ class Light extends Particle {
     myY = height/2;
     myV = (float)Math.random()*6+2;
     myT = Math.random()*2*PI;
-    myColor = color((int)(Math.random()*25)+101, (int)(Math.random()*25)+101, (int)(Math.random()*156));
-    mySize = (float)Math.random()*1+0.25;  
+    myColor = color((int)(Math.random()*25)+151, (int)(Math.random()*25)+151, (int)(Math.random()*206));
+    mySize = (float)Math.random()*1+0.5;  
   }
   
   void show() {
@@ -64,7 +64,7 @@ class Wave extends Particle {
       myArc += PI;
     };
     
-    myColor = color((int)(Math.random()*25)+51, (int)(Math.random()*25)+51, (int)(Math.random()*106));
+    myColor = color((int)(Math.random()*25)+61, (int)(Math.random()*25)+61, (int)(Math.random()*116));
     mySize = (float)Math.random()*1+0.25;    
   }
   
@@ -105,9 +105,9 @@ void setup() {
   }
 }
 
-float pointRot,pointX,pointY;
+float pointX,pointY;
 float pointDur;
-float curRot = 0, curX = width/2, curY = height/2;
+float curX = width/2, curY = height/2;
 float wavyTheta = 0;
 
 float mouseAnchorX = width/2, mouseAnchorY = height/2;
@@ -115,27 +115,23 @@ float mouseAnchorX = width/2, mouseAnchorY = height/2;
 void draw() {
   
   //background, trail effect
-  fill(0,90);
+  fill(0,100);
   rect(-width,-height,width*3,height*3);
   
-  if (abs(pointRot-curRot) < degrees(1) && dist(pointX,pointY,curX,curY) < 1) {
+  if (dist(pointX,pointY,curX,curY) < 1) {
     newPoint();
   } else {
-    curRot += (pointRot-curRot)/pointDur;
     curX += (pointX-curX)/pointDur;
     curY += (pointY-curY)/pointDur;  
   }
   translate(curX,curY);
   translate(-width/2,-height/2);
-  rotate(radians(curRot));
+
   
   //mouse panning, deprecated for now
   mouseAnchorX = -(cos(radians(wavyTheta))*80-width/2)/10;
   mouseAnchorY = -(sin(radians(wavyTheta))*80-height/2)/10;
   
-  stroke(255);
-  strokeWeight(50);
-  point(mouseAnchorX,mouseAnchorY);
   translate(mouseAnchorX,mouseAnchorY);
   
   //animating particles
@@ -152,15 +148,15 @@ void draw() {
     }
   }
   resetMatrix();
-  wavyTheta+=10;
+  wavyTheta += 8;
 }
 
 //determining variant of new particle
 void newRandomParticle(int index) {
   double luck = Math.random();
-    if (luck < 0.2) {
+    if (luck < 0.25) {
       particles[index] = new Light();
-    } else if (luck < 0.25){
+    } else if (luck < 0.4){
       particles[index] = new Wave();      
     } else {
       particles[index] = new Particle();
@@ -169,9 +165,8 @@ void newRandomParticle(int index) {
 
 //making new warp-point
 void newPoint() {
-  pointRot = (float)(Math.random()*2*PI)*10;
-  pointX = (float)(Math.random()*width);
-  pointY = (float)(Math.random()*height);
+  pointX = (float)(Math.random()-0.5)*(width/1.8)+(width/2);
+  pointY = (float)(Math.random()-0.5)*(height/1.8)+(height/2);
   
   pointDur = (float)(Math.random()*30)+90;
 }
