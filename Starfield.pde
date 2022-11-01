@@ -125,8 +125,6 @@ void draw() {
     curX += (pointX-curX)/pointDur;
     curY += (pointY-curY)/pointDur;  
   }
-  System.out.println(pointRot + "\n" + pointX + "\n" + pointY);  
-  System.out.println(curRot + "\n" + curX + "\n" + curY + "\n");
   translate(curX,curY);
   translate(-width/2,-height/2);
   rotate(radians(curRot));
