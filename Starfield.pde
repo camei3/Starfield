@@ -99,23 +99,46 @@ void setup() {
   
   size(600, 600);
   
-  
+  newPoint();
   for (int i = 0; i < particles.length; i++) {
     newRandomParticle(i);
   }
 }
 
 float pointRot,pointX,pointY;
+float pointDur;
+float curRot = 0, curX = width/2, curY = height/2;
+float wavyTheta = 0;
+
 float mouseAnchorX = width/2, mouseAnchorY = height/2;
 
 void draw() {
-  //mouse panning, deprecated for now
-  mouseAnchorX = -(mouseX-width/2)/10;
-  mouseAnchorY = -(mouseY-height/2)/10;
   
   //background, trail effect
   fill(0,90);
   rect(-width,-height,width*3,height*3);
+  
+  if (abs(pointRot-curRot) < degrees(1) && dist(pointX,pointY,curX,curY) < 1) {
+    newPoint();
+  } else {
+    curRot += (pointRot-curRot)/pointDur;
+    curX += (pointX-curX)/pointDur;
+    curY += (pointY-curY)/pointDur;  
+  }
+  System.out.println(pointRot + "\n" + pointX + "\n" + pointY);  
+  System.out.println(curRot + "\n" + curX + "\n" + curY + "\n");
+  translate(curX,curY);
+  translate(-width/2,-height/2);
+  rotate(radians(curRot));
+  
+  //mouse panning, deprecated for now
+  mouseAnchorX = -(cos(radians(wavyTheta))*80-width/2)/10;
+  mouseAnchorY = -(sin(radians(wavyTheta))*80-height/2)/10;
+  
+  stroke(255);
+  strokeWeight(50);
+  point(mouseAnchorX,mouseAnchorY);
+  translate(mouseAnchorX,mouseAnchorY);
   
   //animating particles
   for (int i = 0; i < particles.length; i++) {
@@ -130,6 +153,8 @@ void draw() {
       newRandomParticle(i);
     }
   }
+  resetMatrix();
+  wavyTheta+=10;
 }
 
 //determining variant of new particle
@@ -146,9 +171,11 @@ void newRandomParticle(int index) {
 
 //making new warp-point
 void newPoint() {
-  pointRot = (float)(Math.random()*2*PI);
-  pointX = (float)((Math.random()-0.5)*width/1.9);
-  pointY = (float)((Math.random()-0.5)*height/1.9);
+  pointRot = (float)(Math.random()*2*PI)*10;
+  pointX = (float)(Math.random()*width);
+  pointY = (float)(Math.random()*height);
+  
+  pointDur = (float)(Math.random()*30)+90;
 }
 
 //make a burst mode?
