@@ -84,12 +84,31 @@ class Wave extends Particle {
   }  
 }
 
+//swirl goes into vortex
+class Swirl extends Particle {
+  Swirl() {
+    myX = width/2;
+    myY = height/2;
+    myV = (float)Math.random()-1;
+    myT = Math.random()*2*PI;
+    myColor = color((int)(Math.random()*25)+230, (int)(Math.random()*25)+230, (int)(Math.random()*256));
+    mySize = (float)Math.random()+5;
+  }
+  void move() {
+    oldX = myX;
+    oldY = myY;
+    myX += Math.cos(myT)*myV;
+    myY += Math.sin(myT)*myV;
+    myT += 0.1;
+    myV += 0.1;
+  }
+}
 class Obstruction {
   float anchorX, anchorY;
   float startX, startY;
   float myTheta;
   Obstruction() {
-  
+    
   }
 }
 
@@ -103,6 +122,7 @@ void setup() {
   for (int i = 0; i < particles.length; i++) {
     newRandomParticle(i);
   }
+  particles[0] = new Swirl();
 }
 
 float pointX,pointY;
@@ -153,6 +173,12 @@ void draw() {
 
 //determining variant of new particle
 void newRandomParticle(int index) {
+  if (particles[index] instanceof Swirl) {
+    particles[index] = new Swirl();
+    return;
+  }
+  
+  
   double luck = Math.random();
     if (luck < 0.25) {
       particles[index] = new Light();
