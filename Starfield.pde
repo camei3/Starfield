@@ -1,4 +1,7 @@
 class Particle {
+  protected float myRotV = radians(5);  
+  
+  
   protected float myR;
   
   protected float myX, myY;
@@ -34,6 +37,14 @@ class Particle {
   public float getR() {
     return myR;
   }
+
+    public float getRotV() {
+    return myRotV;
+  }
+  
+  public void setRotV(float v) {
+    myRotV = v;
+  }  
 }
 class Light extends Particle {
   
@@ -81,8 +92,8 @@ class Wave extends Particle {
   
   public void move() {
     myR += myV;
-    myT += 0.01;
-    myArc -= 0.01;
+    myT *= 1.005;
+    myArc *= 0.995;
     myV += myV/16;
     mySize += mySize/64;
   }  
@@ -90,29 +101,39 @@ class Wave extends Particle {
 
 //swirl goes into vortex
 class Swirl extends Light {
+
+  
   Swirl() {
  
-    myV = (float)Math.random()-1;
-    myColor = color((int)(Math.random()*25)+230, (int)(Math.random()*25)+230, (int)(Math.random()*256));
+    myV = -(float)Math.random()-0.5;
+    myColor = color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*25)+230);
     
-    myR = (float)(Math.random()*width/4)+width;
+    myR = (float)(Math.random()*width/4)+width*sqrt(2);
     myT = Math.random()*2*PI;    
     
     myX = (float)Math.cos(myT)*myR;
     myY = (float)Math.sin(myT)*myR;
-    
-    mySize = (float)Math.random()+5;
-  }
-  public void move() {
     oldX = myX;
     oldY = myY;
-    myX = width/2 + (float)(Math.cos(myT)*myR);
-    myY = height/2 + (float)(Math.sin(myT)*myR);
-    myR--;
-    myT += radians(1);
-    //myV += 0.1;
-    System.out.println(myX + " " + myY + "\n");
+    
+    mySize = (float)Math.random()+5;
+    
+    move();
   }
+  public void move() {
+    myR*=0.99;
+    
+    //myR=50;
+    
+    myT += myRotV;    
+    oldX = myX;
+    oldY = myY;
+    myX = width/2 + (float)(Math.cos(myT))*myR*myV;
+    myY = height/2 + (float)(Math.sin(myT))*myR*myV;
+    mySize = myR/50;
+  }
+  
+
 }
 
 class Obstruction {
@@ -135,6 +156,8 @@ void setup() {
     newRandomParticle(i);
   }
   particles[0] = new Swirl();
+  particles[1] = new Swirl();  
+  particles[1].setRotV(particles[1].getRotV()*-1);
 }
 
 float pointX,pointY;
@@ -173,7 +196,12 @@ void draw() {
     particles[i].show();
     
     //remaking new particles of ones off-screen
-    if (particles[i] instanceof Wave && particles[i].getR() > dist(0,0,width,height)) {
+    if (particles[i] instanceof Swirl && particles[i].getR() < 2) {
+      particles[i] = new Swirl();
+      if (i == 1) {
+        particles[1].setRotV(particles[1].getRotV()*-1);
+      }
+    } else if (particles[i] instanceof Wave && particles[i].getR() > dist(0,0,width,height)) {
       newRandomParticle(i);
     } else if (particles[i].myX > width*2 || particles[i].myX < -height || particles[i].myY > height*2 || particles[i].myX < -width ) {
       newRandomParticle(i);
