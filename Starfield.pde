@@ -174,8 +174,6 @@ float pointDur;
 float curX = width/2, curY = height/2;
 float wavyTheta = 0;
 
-float mouseAnchorX = width/2, mouseAnchorY = height/2;
-
 void draw() {
 
   //background, trail effect
@@ -190,13 +188,6 @@ void draw() {
   }
   translate(curX, curY);
   translate(-width/2, -height/2);
-
-
-  //mouse panning, deprecated for now
-  mouseAnchorX = -(cos(radians(wavyTheta))*80-width/2)/10;
-  mouseAnchorY = -(sin(radians(wavyTheta))*80-height/2)/10;
-
-  translate(mouseAnchorX, mouseAnchorY);
 
   //animating particles
   for (int i = 0; i < particles.length; i++) {
