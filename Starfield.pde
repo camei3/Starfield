@@ -147,6 +147,8 @@ class Obstruction {
 
 Particle[] particles = new Particle[200];
 
+Light[] lights = new Light[100];
+
 void setup() {
   
   size(600, 600);
@@ -158,6 +160,11 @@ void setup() {
   particles[0] = new Swirl();
   particles[1] = new Swirl();  
   particles[1].setRotV(particles[1].getRotV()*-1);
+  
+  for (int i = 0; i < lights.length; i++) {
+    lights[i] = new Light();
+  }  
+  
 }
 
 float pointX,pointY;
@@ -206,6 +213,14 @@ void draw() {
     } else if (particles[i].myX > width*2 || particles[i].myX < -height || particles[i].myY > height*2 || particles[i].myX < -width ) {
       newRandomParticle(i);
     }
+  }
+  
+  for (int i = 0; i < lights.length; i++) {
+    lights[i].move();
+    lights[i].show();
+    if (lights[i].myX > width*2 || lights[i].myX < -height || lights[i].myY > height*2 || lights[i].myX < -width ) {
+      lights[i] = new Light();
+    }    
   }
   resetMatrix();
   wavyTheta += 8;
