@@ -188,20 +188,15 @@ void draw() {
   }
   translate(curX, curY);
   translate(-width/2, -height/2);
-
-  strokeWeight( sqrt(20000/ ( dist(width*3/2-2*curX,height*3/2-2*curY,width/2,height/2) + 10) ) * 10);
-
   //line(width*3/2-2*curX,height*3/2-2*curY,width/2,height/2);
   stroke(128);
-  point(width/2-curX,height/2-curY);
-  
-  point(width-curX,height-curY);
-  
-  point(width*3/2-curX,height*3/2-curY);
-  
-  point(curX,curY);
-  point(width/2,height/2);
+  strokeWeight( sqrt(20000/ ( dist((width*5/2-3*curX)/2,(height*5/2-3*curY)/2,width/2,height/2) + 10) ) * 7.5);    
+  point(width*5/4-curX*3/2,height*5/4-curY*3/2);
+  point(width*11/8-curX*7/4,height*11/8-curY*7/4);  
+  point(width*23/16-curX*15/8,height*23/16-curY*15/8);  
+  point(width*47/32-curX*31/16,height*47/32-curY*31/16);    
   stroke(255);  
+  strokeWeight( sqrt(20000/ ( dist(width*3/2-2*curX,height*3/2-2*curY,width/2,height/2) + 10) ) * 10);  
   point(width*3/2-2*curX,height*3/2-2*curY);
   
 
