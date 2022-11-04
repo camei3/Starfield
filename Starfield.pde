@@ -154,7 +154,7 @@ Light[] lights = new Light[100];
 
 void setup() {
 
-  size(600, 600);
+  size(800, 800);
 
   newPoint();
   for (int i = 0; i < particles.length; i++) {
@@ -189,6 +189,23 @@ void draw() {
   translate(curX, curY);
   translate(-width/2, -height/2);
 
+  strokeWeight( sqrt(20000/ ( dist(width*3/2-2*curX,height*3/2-2*curY,width/2,height/2) + 10) ) * 10);
+
+  //line(width*3/2-2*curX,height*3/2-2*curY,width/2,height/2);
+  stroke(128);
+  point(width/2-curX,height/2-curY);
+  
+  point(width-curX,height-curY);
+  
+  point(width*3/2-curX,height*3/2-curY);
+  
+  point(curX,curY);
+  point(width/2,height/2);
+  stroke(255);  
+  point(width*3/2-2*curX,height*3/2-2*curY);
+  
+
+
   //animating particles
   for (int i = 0; i < particles.length; i++) {
 
@@ -196,7 +213,7 @@ void draw() {
     particles[i].show();
 
     //remaking new particles of ones off-screen
-    if (particles[i] instanceof Swirl && particles[i].getR() < 2) {
+    if (particles[i] instanceof Swirl && particles[i].getR() < 5) {
       particles[i] = new Swirl();
       if (i == 1) {
         particles[1].setRotV(particles[1].getRotV()*-1);
