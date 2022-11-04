@@ -188,18 +188,6 @@ void draw() {
   }
   translate(curX, curY);
   translate(-width/2, -height/2);
-  //line(width*3/2-2*curX,height*3/2-2*curY,width/2,height/2);
-  stroke(128);
-  strokeWeight( sqrt(20000/ ( dist((width*5/2-3*curX)/2,(height*5/2-3*curY)/2,width/2,height/2) + 10) ) * 7.5);    
-  point(width*5/4-curX*3/2,height*5/4-curY*3/2);
-  point(width*11/8-curX*7/4,height*11/8-curY*7/4);  
-  point(width*23/16-curX*15/8,height*23/16-curY*15/8);  
-  point(width*47/32-curX*31/16,height*47/32-curY*31/16);    
-  stroke(255);  
-  strokeWeight( sqrt(20000/ ( dist(width*3/2-2*curX,height*3/2-2*curY,width/2,height/2) + 10) ) * 10);  
-  point(width*3/2-2*curX,height*3/2-2*curY);
-  
-
 
   //animating particles
   for (int i = 0; i < particles.length; i++) {
@@ -227,6 +215,26 @@ void draw() {
       lights[i] = new Light();
     }
   }
+  
+  stroke(176,198,220,200);
+  strokeWeight( sqrt(20000/ ( dist((width*5/2-3*curX)/2,(height*5/2-3*curY)/2,width/2,height/2) + 10) ) * 8);    
+  point(width*47/32-curX*31/16,height*47/32-curY*31/16);    
+  stroke(204,230,255);  
+  strokeWeight( sqrt(20000/ ( dist(width*3/2-2*curX,height*3/2-2*curY,width/2,height/2) + 10) ) * 10);  
+  point(width*3/2-curX*2,height*3/2-curY*2);
+  
+  stroke(60,68,75);  
+  strokeWeight(10);  
+  
+  line(width*3/2-curX*2,height*3/2-curY*2,width*7/4-curX*5/2,height*7/4-curY*5/2);
+  
+  stroke(184,207,230);  
+  strokeWeight( sqrt(20000/ ( dist(width*7/4-curX*5/2,height*7/4-curY*5/2,width/2,height/2) + 10) ) * 10);  
+  line(width*7/4-curX*5/2,height*7/4-curY*5/2,width*15/8-curX*11/4,height*15/8-curY*11/4);
+  stroke(180,203,225);
+  point(width*15/8-curX*11/4,height*15/8-curY*11/4);
+  
+  
   resetMatrix();
   wavyTheta += 8;
 }
