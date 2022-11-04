@@ -1,7 +1,8 @@
 class Particle {
-  protected float myRotV = radians(5);  
-
-
+  //for subclass Swirl
+  protected float myRotV = radians(5); 
+  
+  //for Wave & Swirl
   protected float myR;
 
   protected float myX, myY;
@@ -9,6 +10,7 @@ class Particle {
   protected color myColor;
   protected float myV, mySize;
   protected float oldX, oldY;
+  
   Particle() {
     myX = width/2;
     myY = height/2;
@@ -19,8 +21,6 @@ class Particle {
   }
 
   public void move() {
-    oldX = myX;
-    oldY = myY;
     myX += Math.cos(myT)*myV;
     myY += Math.sin(myT)*myV;
     myT += 0.0075;
@@ -46,6 +46,7 @@ class Particle {
     myRotV = v;
   }
 }
+
 class Light extends Particle {
 
   Light() {
@@ -64,6 +65,8 @@ class Light extends Particle {
   }
 
   public void move() {
+    oldX = myX;
+    oldY = myY;    
     super.move();
     myV *= 1.01;
     mySize *= .95;
@@ -105,9 +108,7 @@ class Wave extends Particle {
   }
 }
 
-//swirl goes into vortex
 class Swirl extends Light {
-
 
   Swirl() {
 
@@ -129,8 +130,6 @@ class Swirl extends Light {
   public void move() {
     myR*=0.99;
 
-    //myR=50;
-
     myT += myRotV;    
     oldX = myX;
     oldY = myY;
@@ -140,30 +139,24 @@ class Swirl extends Light {
   }
 }
 
-class Obstruction {
-  float anchorX, anchorY;
-  float startX, startY;
-  float myTheta;
-  Obstruction() {
-  }
-}
-
+//extras particles
+Light[] lights = new Light[100];
+//all other particles
 Particle[] particles = new Particle[200];
 
-Light[] lights = new Light[100];
-
 void setup() {
-
   size(800, 800);
 
   newPoint();
   for (int i = 0; i < particles.length; i++) {
     newRandomParticle(i);
   }
+  
+  //the Oddball particles
   particles[0] = new Swirl();
-  particles[1] = new Swirl();  
-  particles[1].setRotV(particles[1].getRotV()*-1);
+  particles[1] = new Swirl();   
 
+  //extras particles
   for (int i = 0; i < lights.length; i++) {
     lights[i] = new Light();
   }
@@ -180,15 +173,20 @@ void draw() {
   fill(0, 255);
   rect(-width, -height, width*3, height*3);
 
+  //spawnpoint reaches objective point
   if (dist(pointX, pointY, curX, curY) < 1) {
     newPoint();
   } else {
     curX += (pointX-curX)/pointDur;
     curY += (pointY-curY)/pointDur;
   }
+
+  //move closer to objective point
   translate(curX, curY);
   translate(-width/2, -height/2);
-
+  //bob a little
+  translate(cos(radians(wavyTheta/5))*10,sin(radians(wavyTheta/5))*10);
+  
   //animating particles
   for (int i = 0; i < particles.length; i++) {
 
@@ -196,18 +194,19 @@ void draw() {
     particles[i].show();
 
     //remaking new particles of ones off-screen
+     //--Oddball particle respawn condition
     if (particles[i] instanceof Swirl && particles[i].getR() < 5) {
-      particles[i] = new Swirl();
-      if (i == 1) {
-        particles[1].setRotV(particles[1].getRotV()*-1);
-      }
+      newRandomParticle(i);
+     //--Wave particle respawn condition
     } else if (particles[i] instanceof Wave && particles[i].getR() > dist(0, 0, width, height)) {
       newRandomParticle(i);
+     //--Light or Particle respawn condition
     } else if (particles[i].myX > width*2 || particles[i].myX < -height || particles[i].myY > height*2 || particles[i].myX < -width ) {
       newRandomParticle(i);
     }
   }
-
+  
+  //handling the extras particles
   for (int i = 0; i < lights.length; i++) {
     lights[i].move();
     lights[i].show();
@@ -216,24 +215,25 @@ void draw() {
     }
   }
   
+  //ship
+  //---head
   stroke(176,198,220,200);
   strokeWeight( sqrt(20000/ ( dist((width*5/2-3*curX)/2,(height*5/2-3*curY)/2,width/2,height/2) + 10) ) * 8);    
-  point(width*47/32-curX*31/16,height*47/32-curY*31/16);    
+  point(width*47/32-curX*31/16,height*47/32-curY*31/16);  
+  //--neck
   stroke(204,230,255);  
   strokeWeight( sqrt(20000/ ( dist(width*3/2-2*curX,height*3/2-2*curY,width/2,height/2) + 10) ) * 10);  
   point(width*3/2-curX*2,height*3/2-curY*2);
-  
+  //--pole
   stroke(60,68,75);  
   strokeWeight(10);  
-  
   line(width*3/2-curX*2,height*3/2-curY*2,width*7/4-curX*5/2,height*7/4-curY*5/2);
-  
+  //--tank
   stroke(184,207,230);  
   strokeWeight( sqrt(20000/ ( dist(width*7/4-curX*5/2,height*7/4-curY*5/2,width/2,height/2) + 10) ) * 10);  
   line(width*7/4-curX*5/2,height*7/4-curY*5/2,width*15/8-curX*11/4,height*15/8-curY*11/4);
   stroke(180,203,225);
   point(width*15/8-curX*11/4,height*15/8-curY*11/4);
-  
   
   resetMatrix();
   wavyTheta += 8;
@@ -241,13 +241,18 @@ void draw() {
 
 //determining variant of new particle
 void newRandomParticle(int index) {
+  double luck = Math.random();
+  
   if (particles[index] instanceof Swirl) {
     particles[index] = new Swirl();
+        //make one of Oddball move opposite
+    if (luck < 0.5) {
+      particles[index].setRotV(particles[index].getRotV()*-1);
+    }
     return;
   }
 
 
-  double luck = Math.random();
   if (luck < 0.25) {
     particles[index] = new Light();
   } else if (luck < 0.4) {
@@ -264,6 +269,3 @@ void newPoint() {
 
   pointDur = (float)(Math.random()*30)+90;
 }
-
-//make a burst mode?
-//constant object reflected on vanish point, like a ship
