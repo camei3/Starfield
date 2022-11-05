@@ -230,7 +230,7 @@ void draw() {
   line(width*3/2-curX*2,height*3/2-curY*2,width*7/4-curX*5/2,height*7/4-curY*5/2);
   //--tank
   stroke(184,207,230);  
-  strokeWeight( abs( 50 * cos(dist(width*7/4-curX*5/2,height*7/4-curY*5/2,width-curX,height-curY) * (PI/( sqrt(2) *1.5*width)) )));   
+  strokeWeight( abs( 55 * cos(dist(width*7/4-curX*5/2,height*7/4-curY*5/2,width-curX,height-curY) * (PI/( sqrt(2) *1.5*width)) )));   
   line(width*7/4-curX*5/2,height*7/4-curY*5/2,width*15/8-curX*11/4,height*15/8-curY*11/4);
   stroke(180,203,225);
   point(width*15/8-curX*11/4,height*15/8-curY*11/4);
