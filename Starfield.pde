@@ -217,12 +217,12 @@ void draw() {
   
   //ship
   //---head
-  stroke(176,198,220,200);
-  strokeWeight( sqrt(20000/ ( dist((width*5/2-3*curX)/2,(height*5/2-3*curY)/2,width/2,height/2) + 10) ) * 8);    
-  point(width*47/32-curX*31/16,height*47/32-curY*31/16);  
+  stroke(176,198,220,200);    
+  strokeWeight( abs(40 * cos(dist(width*47/32-curX*31/16,height*47/32-curY*31/16,width-curX,height-curY) * (PI/( sqrt(2)*1.5*width)) )));  
+  point(width*47/32-curX*31/16,height*47/32-curY*31/16); 
   //--neck
-  stroke(204,230,255);  
-  strokeWeight( sqrt(20000/ ( dist(width*3/2-2*curX,height*3/2-2*curY,width/2,height/2) + 10) ) * 10);  
+  stroke(204,230,255);   
+  strokeWeight( abs(50 * cos(dist(width*3/2-curX*2,height*3/2-curY*2,width-curX,height-curY) * (PI/( sqrt(2)*1.5*width)) )));    
   point(width*3/2-curX*2,height*3/2-curY*2);
   //--pole
   stroke(60,68,75);  
@@ -230,7 +230,7 @@ void draw() {
   line(width*3/2-curX*2,height*3/2-curY*2,width*7/4-curX*5/2,height*7/4-curY*5/2);
   //--tank
   stroke(184,207,230);  
-  strokeWeight( sqrt(20000/ ( dist(width*7/4-curX*5/2,height*7/4-curY*5/2,width/2,height/2) + 10) ) * 10);  
+  strokeWeight( abs( 50 * cos(dist(width*7/4-curX*5/2,height*7/4-curY*5/2,width-curX,height-curY) * (PI/( sqrt(2) *1.5*width)) )));   
   line(width*7/4-curX*5/2,height*7/4-curY*5/2,width*15/8-curX*11/4,height*15/8-curY*11/4);
   stroke(180,203,225);
   point(width*15/8-curX*11/4,height*15/8-curY*11/4);
